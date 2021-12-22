@@ -4,6 +4,7 @@
   any_errors_fatal: true
   tasks:
     - name: Check Date with Shell command
+      delegate_to: localhost
       shell: |
         ls -al /home/circleci/project/molecule/latest/roles || true
         ls -al /home/circleci/project/molecule/default/roles || true
@@ -19,6 +20,7 @@
       changed_when: false
 
     - name: debugger
+      delegate_to: localhost
       debug: msg="{{ output.stdout }}"
 
   roles:
