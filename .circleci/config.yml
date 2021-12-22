@@ -32,10 +32,10 @@ jobs:
       - run: pip install "ansible~=<<parameters.ansible >>.0"
       - run: pip install -r test-requirements.txt
       - run:
-          no_output_timeout: 30m
+          no_output_timeout: 60m
           command: molecule test -s default --destroy always
       - run:
-          no_output_timeout: 30m
+          no_output_timeout: 60m
           command: |
             if [[ -d 'molecule/alternative' ]]; then
               molecule test -s alternative --destroy always
@@ -43,7 +43,7 @@ jobs:
               echo 'No alternative test'
             fi
       - run:
-          no_output_timeout: 30m
+          no_output_timeout: 60m
           command: |
             if [[ -z "${CIRCLE_PULL_REQUEST}" ]] && [[ -d 'molecule/latest' ]]; then
               molecule test -s latest --destroy always
