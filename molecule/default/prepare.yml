@@ -6,8 +6,11 @@
     - name: Check Date with Shell command
       delegate_to: localhost
       shell: |
+        set -xe
         ls -al /home/circleci/project/molecule/latest/roles || true
+        ls -al /home/circleci/project/molecule/latest/roles/cloudalchemy.prometheus || true
         ls -al /home/circleci/project/molecule/default/roles || true
+        ls -al /home/circleci/project/molecule/default/roles/cloudalchemy.prometheus || true
         ls -al /home/circleci/.ansible/roles || true
         ls -al /usr/share/ansible/roles || true
         ls -al /etc/ansible/roles || true
@@ -21,5 +24,5 @@
 
     - name: debugger
       delegate_to: localhost
-      debug: msg="{{ output.stdout }}"
+      debug: msg="{{ output.stdout.split('\n') }}"
 
