@@ -3,6 +3,7 @@
   hosts: all
   any_errors_fatal: true
   roles:
-    - ansible-prometheus
+    # - ansible-prometheus
+    - cloudalchemy.prometheus
   vars:
     prometheus_version: latest
