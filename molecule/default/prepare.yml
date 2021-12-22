@@ -32,7 +32,10 @@
         set -xe
         dir="/home/circleci/project/molecule/latest/roles"
         echo "dir is $dir"
-        ls -al $dir || true
+        echo "pwd is:"
+        pwd
+        ls -al /
+        ls -al $dir
       register: output
       tags: output
       changed_when: false
@@ -47,7 +50,10 @@
         set -xe
         dir="/home/circleci/project/molecule/default/roles"
         echo "dir is $dir"
-        ls -al $dir || true
+        echo "pwd is:"
+        pwd
+        ls -al /
+        ls -al $dir 
       register: output
       tags: output
       changed_when: false
