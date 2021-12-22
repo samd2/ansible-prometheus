@@ -3,21 +3,36 @@
   hosts: all
   gather_facts: false
   tasks: 
+    # - name: Check Date with Shell command
+    #   delegate_to: localhost
+    #   shell: |
+    #     set -xe
+    #     ls -al /home/circleci/project/molecule/latest/roles || true
+    #     ls -al /home/circleci/project/molecule/latest/roles/cloudalchemy.prometheus || true
+    #     ls -al /home/circleci/project/molecule/default/roles || true
+    #     ls -al /home/circleci/project/molecule/default/roles/cloudalchemy.prometheus || true
+    #     ls -al /home/circleci/.ansible/roles || true
+    #     ls -al /usr/share/ansible/roles || true
+    #     ls -al /etc/ansible/roles || true
+    #     ls -al /home/circleci/.cache/ansible-lint/dda4ac/roles || true
+    #     ls -al /home/circleci/.cache/ansible-lint/dda4ac/roles || true
+    #     ls -al /home/circleci/project/molecule/latest || true
+    #     ls -al /home/circleci/project/molecule/default || true
+    #   register: output
+    #   tags: output
+    #   changed_when: false
+
+    # - name: debugger
+    #   delegate_to: localhost
+    #   debug: msg="{{ output.stdout.split('\n') }}"
+
     - name: Check Date with Shell command
       delegate_to: localhost
       shell: |
         set -xe
-        ls -al /home/circleci/project/molecule/latest/roles || true
-        ls -al /home/circleci/project/molecule/latest/roles/cloudalchemy.prometheus || true
-        ls -al /home/circleci/project/molecule/default/roles || true
-        ls -al /home/circleci/project/molecule/default/roles/cloudalchemy.prometheus || true
-        ls -al /home/circleci/.ansible/roles || true
-        ls -al /usr/share/ansible/roles || true
-        ls -al /etc/ansible/roles || true
-        ls -al /home/circleci/.cache/ansible-lint/dda4ac/roles || true
-        ls -al /home/circleci/.cache/ansible-lint/dda4ac/roles || true
-        ls -al /home/circleci/project/molecule/latest || true
-        ls -al /home/circleci/project/molecule/default || true
+        dir="/home/circleci/project/molecule/latest/roles"
+        echo "dir is $dir"
+        ls -al $dir || true
       register: output
       tags: output
       changed_when: false
@@ -25,4 +40,20 @@
     - name: debugger
       delegate_to: localhost
       debug: msg="{{ output.stdout.split('\n') }}"
+
+    - name: Check Date with Shell command
+      delegate_to: localhost
+      shell: |
+        set -xe
+        dir="/home/circleci/project/molecule/default/roles"
+        echo "dir is $dir"
+        ls -al $dir || true
+      register: output
+      tags: output
+      changed_when: false
+
+    - name: debugger
+      delegate_to: localhost
+      debug: msg="{{ output.stdout.split('\n') }}"
+
 
