@@ -5,10 +5,11 @@ executors:
   python:
     docker:
       - image: cimg/python:3.9
-    resource_class: large
+    resource_class: xlarge
   publisher:
     docker:
       - image: quay.io/cloudalchemy/publisher:latest
+    resource_class: xlarge
 
 jobs:
   lint:
