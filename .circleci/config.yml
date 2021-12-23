@@ -6,7 +6,6 @@ executors:
     docker:
       - image: cimg/python:3.9
     resource_class: large
-    parallelism: 4
   publisher:
     docker:
       - image: quay.io/cloudalchemy/publisher:latest
