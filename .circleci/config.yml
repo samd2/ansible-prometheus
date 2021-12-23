@@ -4,7 +4,7 @@ version: 2.1
 executors:
   python:
     docker:
-      - image: cimg/python:3.9
+      - image: cimg/python:3.10
   publisher:
     docker:
       - image: quay.io/cloudalchemy/publisher:latest
@@ -15,12 +15,12 @@ jobs:
     steps:
       - checkout
       - run: pip install ansible ansible-lint yamllint flake8
-      - run: mkdir -p .cache/roles && ln -s ../.. .cache/roles/${CIRCLE_PROJECT_REPONAME}
       - run: ansible-lint
       - run: yamllint .
       - run: flake8
 
-  test:
+  # splitting up jobs (test_default, test_alternative, test_latest) so that they run in parallel.
+  test_default:
     executor: python
     parameters:
       ansible:
@@ -28,12 +28,21 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: ln -s ~/project ~/${CIRCLE_PROJECT_REPONAME}
       - run: pip install "ansible~=<<parameters.ansible >>.0"
       - run: pip install -r test-requirements.txt
       - run:
           no_output_timeout: 60m
           command: molecule test -s default --destroy always
+  test_alternative:
+    executor: python
+    parameters:
+      ansible:
+        type: string
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: pip install "ansible~=<<parameters.ansible >>.0"
+      - run: pip install -r test-requirements.txt
       - run:
           no_output_timeout: 60m
           command: |
@@ -42,6 +51,16 @@ jobs:
             else
               echo 'No alternative test'
             fi
+  test_latest:
+    executor: python
+    parameters:
+      ansible:
+        type: string
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: pip install "ansible~=<<parameters.ansible >>.0"
+      - run: pip install -r test-requirements.txt
       - run:
           no_output_timeout: 60m
           command: |
@@ -74,12 +93,36 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - test:
+      - test_default:
           matrix:
             parameters:
               ansible:
                 - "2.9"
                 - "2.10"
+                - "4.10"
+                - "5.1"
+          filters:
+            tags:
+              only: /.*/
+      - test_alternative:
+          matrix:
+            parameters:
+              ansible:
+                - "2.9"
+                - "2.10"
+                - "4.10"
+                - "5.1"
+          filters:
+            tags:
+              only: /.*/
+      - test_latest:
+          matrix:
+            parameters:
+              ansible:
+                - "2.9"
+                - "2.10"
+                - "4.10"
+                - "5.1"
           filters:
             tags:
               only: /.*/
@@ -87,7 +130,9 @@ workflows:
           context: release
           requires:
             - lint
-            - test
+            - test_default
+            - test_alternative
+            - test_latest
           filters:
             branches:
               only: master
@@ -97,7 +142,9 @@ workflows:
           context: galaxy
           requires:
             - lint
-            - test
+            - test_default
+            - test_alternative
+            - test_latest
             - release
           filters:
             branches:
