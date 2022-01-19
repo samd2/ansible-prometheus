@@ -1,5 +1,6 @@
 #molecule>=3.0.0
-git+https://github.com/ansible-community/molecule@main#egg=molecule
+#git+https://github.com/ansible-community/molecule@main#egg=molecule
+molecule=3.4.1
 molecule-docker
 docker
 ansible-lint>=3.4.0
